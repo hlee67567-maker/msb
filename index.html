@@ -572,6 +572,15 @@ dialog p { margin:0 0 10px; line-height:1.45; }
 .art-dessert::before { content:""; position:absolute; inset:0 0 auto; height:26%; border-bottom:1px solid #957377; border-radius:49% 49% 45% 45%; background:#d89871; }
 .art-dessert i { position:absolute; top:53%; left:27%; width:9%; aspect-ratio:1; border-radius:50%; background:var(--ink); box-shadow:clamp(11px,2.7vw,29px) 0 var(--ink); }
 .art-dessert::after { content:""; position:absolute; left:43%; top:64%; width:15%; height:12%; border:1px solid var(--ink); border-top:0; border-radius:0 0 50% 50%; }
+.art-goose { background:#fff7d6; }
+.art-goose i { position:absolute; left:21%; bottom:18%; width:56%; height:40%; border:1.5px solid var(--ink); border-radius:52% 55% 43% 58%; background:#fffdfa; }
+.art-goose i::before { content:""; position:absolute; left:64%; bottom:42%; width:39%; height:155%; border:1.5px solid var(--ink); border-bottom:0; border-radius:55% 66% 20% 30%; background:radial-gradient(circle at 67% 22%,var(--ink) 0 9%,#fffdfa 12%); }
+.art-goose i::after { content:""; position:absolute; left:99%; bottom:112%; width:31%; height:25%; border:1px solid var(--ink); border-radius:25% 65% 56% 22%; background:#ffac69; }
+.art-future { height:60%; border-radius:8px 8px 17px 7px; background:#f8e7ff; transform:rotate(9deg); }
+.art-future b { color:#5324ce; }
+.art-ufo { width:min(51%,144px); height:27%; margin-top:12%; border-radius:50%; background:#c9f1db; transform:rotate(-12deg); }
+.art-ufo i { position:absolute; left:29%; bottom:66%; width:43%; height:145%; border:2px solid var(--ink); border-radius:60% 63% 26% 25%; background:#efe0ff; }
+.art-ufo::after { content:""; position:absolute; bottom:25%; width:7%; aspect-ratio:1; border-radius:50%; background:var(--ink); box-shadow:-14px 0 var(--ink),14px 0 var(--ink); }
 
 @media (max-width:700px) {
   .art-stamp { min-width:54px; box-shadow:3px 4px var(--ink); }
@@ -933,6 +942,105 @@ const dessertQuestions = [
 ];
 
 
+const gooseProfiles = {
+  trace: {title:'泥点证词收藏家', line:'别人盯着空掉的底座。\n你发现泥脚印有一只是倒着的。', scene:'遇到没头绪的事，你喜欢先捡起一件确定的小事。拼起来的过程比一口气猜中更过瘾。', habit:'今天找到一粒泥点就算有进展。鹅可以明天再找。', color:'#e8ff6d', symbol:'✦'},
+  theory: {title:'先画结局的人', line:'鹅还没找到。\n你已经为它构思了两份简历。', scene:'线索越少，你脑内的地图越大。你往往靠一个有点离谱的假设找到新的路。', habit:'先猜一个好玩的版本，猜错了也多了个故事。', color:'#d8c6ff', symbol:'✎'},
+  crew: {title:'临时鹅友会会长', line:'你只问了句「要不要一起找？」\n下一秒，连卖玉米的都带上了望远镜。', scene:'遇到一团乱麻，你会先拉把椅子给别人。事情有人一起琢磨，难度就先降了一格。', habit:'找不到鹅，也可以请搭子一起吃根玉米。', color:'#ffc7d7', symbol:'♡'},
+  bench: {title:'长椅旁听员', line:'全公园都在追鹅。\n你坐在原地，等它自己讲完。', scene:'局面越吵，你越习惯留一点空。等别人说完、心跳慢下来，有些答案就从背景里浮出来了。', habit:'顾不上想明白的时候，先挑一张晒得到太阳的椅子。', color:'#b3e1d4', symbol:'☀'}
+};
+const gooseQuestions = [
+  {title:'公园的石头鹅不见了。', prompt:'底座只剩一张歪歪扭扭的「今天请假」。你先做什么？', options:[
+    ['看看字是用哪根草写的，笔画上还有泥。','trace'],
+    ['推测它对「禁止喂食」那块牌子早有意见。','theory'],
+    ['找遛狗的人碰头，狗应该比人知道得多。','crew'],
+    ['坐到旁边。说不定它只是出去接个电话。','bench']
+  ]},
+  {title:'垃圾桶说自己亲眼看见鹅坐地铁走了。', prompt:'它神情很严肃，可是它平常也爱胡说。', options:[
+    ['请它画一下地铁的标志，顺便核对脚印方向。','trace'],
+    ['递给它一张车票，请它接着讲下一站。','theory'],
+    ['先留它把这段说完。胡说也可能说漏嘴。','bench'],
+    ['把旁边的长椅也叫来，问问双方记得哪里一样。','crew']
+  ]},
+  {title:'池塘边出现四样东西，你只能带走一样。', prompt:'带哪件去下一站？', options:[
+    ['鹅写给自己、邮编是「嘎」的那张明信片。','theory'],
+    ['一本空白本，已经有三位目击者答应来填。','crew'],
+    ['一小段没被风吹乱的泥脚印拓印。','trace'],
+    ['一袋橘子。找累了可以坐下来慢慢剥。','bench']
+  ]},
+  {title:'鹅在出口朝你招手，说只是想换个姿势。', prompt:'它问你现在最想做什么。', options:[
+    ['「那一起站会儿？我也坐够了。」','bench'],
+    ['「你等等，找你的那几个人正在分玉米。」','crew'],
+    ['「能不能再走一遍？我差一只脚印没对上。」','trace'],
+    ['「好，我替你想了个新姿势，叫假装自己是鸡。」','theory']
+  ]}
+];
+
+const futureProfiles = {
+  plan: {title:'备用小票派', line:'你拿走了一张小票。\n背面写着三条不同的回家路线。', scene:'你愿意去试新东西，只是喜欢先留一条回来得及的路。知道最坏会怎样以后，反而更容易出门。', habit:'留一个备用选项就够了，小票背面可以空一点。', color:'#b9def1', symbol:'▤'},
+  leap: {title:'盲袋当场拆派', line:'明天的你话还没讲完。\n你已经拆开了未知口味。', scene:'你经常靠亲手试一把来做决定。比起想出最完美的答案，你更信拆开之后的第一口。', habit:'想试就试一点点，一包可以分两天拆。', color:'#ffc4a4', symbol:'✷'},
+  feeling: {title:'听半句话派', line:'你没问明天会发生什么。\n你先问「你现在累不累？」', scene:'做选择时，你会先听听自己和身边的人是什么感觉。哪怕只有一句「这个听起来有点勉强」，也算一条线索。', habit:'心里那句小声的话，也可以把它听完。', color:'#ffc7d7', symbol:'♡'},
+  pause: {title:'先吹会儿冷气派', line:'未来就站在你对面。\n你们在冰柜前多站了一分钟。', scene:'当每个选项都像在催你，你会退半步。很多决定在搁一会儿之后，自己就没那么难做了。', habit:'有些事不用当场结账，先出去走一圈。', color:'#d8c6ff', symbol:'Ⅱ'}
+};
+const futureQuestions = [
+  {title:'转过冰柜，你撞见了明天的自己。', prompt:'对方穿着不同的两只袜子，手里拿着最后一个布丁。你先说什么？', options:[
+    ['「先交代一下，从几点开始事情变奇怪？」','plan'],
+    ['「布丁什么味的？明天那个我帮你吃。」','leap'],
+    ['「你看着挺累的，你想说还是想坐会儿？」','feeling'],
+    ['「先等一下，耳朵刚刚在冰柜边冻住了。」','pause']
+  ]},
+  {title:'小票能提前打印明天的一句话。', prompt:'便利店只让你挑一行。', options:[
+    ['明天第一口吃到的东西，写了味道没写名字。','leap'],
+    ['谁明天有空陪我走两站路。','feeling'],
+    ['哪一件事明天改个时间会比较顺。','plan'],
+    ['暂不打印。纸还热着，给后面的人用吧。','pause']
+  ]},
+  {title:'货架上有四种「明天专用」零钱。', prompt:'不收钱，你只需要挑一个装进口袋。', options:[
+    ['一枚听见「你自己想怎样」就会转起来的硬币。','feeling'],
+    ['一张可以换第二次机会的千层面优惠券。','plan'],
+    ['一张可随时支取三分钟的休息卡。','pause'],
+    ['一枚投出去就随机换一种口味的糖。','leap']
+  ]},
+  {title:'快走了，明天的你把布丁掰成两半。', prompt:'你吃下第一口前，做了哪件事？', options:[
+    ['把手机扣过去，等这一口吃完再说。','pause'],
+    ['看看它脸色，把焦糖多的那半递过去。','feeling'],
+    ['把哪种口味值得回购写在小票背面。','plan'],
+    ['拿了另一种从没见过的勺子，试试蘸辣椒。','leap']
+  ]}
+];
+
+const earthProfiles = {
+  warmth: {title:'热饺子传教士', line:'你给外星人夹了第一只饺子。\n对方记住了「慢点，烫」。', scene:'你最舍不得的是那些不必大张旗鼓的照顾。有人留一口热的，就足够说明这颗星球为什么值得来。', habit:'今天给自己也留一口热的。', color:'#ffc4a4', symbol:'♡'},
+  odd: {title:'怪话收藏员', line:'你放了一段塑料袋追人的录像。\n外星飞船里有人笑得忘了关舱门。', scene:'你愿意把生活里那些不太讲道理的部分分享出去。一起笑过一小下，再陌生的人也能说上第二句。', habit:'遇见好笑的小事，留一句「我得讲给谁听」。', color:'#e8ff6d', symbol:'✷'},
+  scenery: {title:'晚霞加时选手', line:'十秒展示结束。\n你和外星人又一起看完了半朵云。', scene:'你容易被声音、颜色或一阵风留住。你讲喜欢的东西，常从「你仔细看」开始。', habit:'快走到家时也可以抬个头，还有最后一点光。', color:'#d8c6ff', symbol:'✦'},
+  ease: {title:'慢慢来星球居民', line:'你没抢着介绍地球。\n你让外星人先挑个舒服的地方坐。', scene:'你喜欢可以把声音放低的关系，也珍惜不用交代在干什么的时间。安静待一会儿就很够。', habit:'今天的行程可以留一格，写「坐着」。', color:'#b3e1d4', symbol:'☾'}
+};
+const earthQuestions = [
+  {title:'飞碟降落，外星人只给你十秒介绍地球。', prompt:'你的手刚碰到话筒，会先放出什么？', options:[
+    ['一桌人喊「给还没到的人留两只饺子」。','warmth'],
+    ['猫被自己的尾巴吓了一跳，又假装什么都没发生。','odd'],
+    ['离下雨还差一秒，风里已经有湿柏油的味道。','scenery'],
+    ['公园长椅刚好一半晒太阳，一半有树荫。','ease']
+  ]},
+  {title:'外星人听完问「这里的日常到底有多好？」', prompt:'你想带 TA 亲自去看哪一段？', options:[
+    ['周末早餐那家店，人们会把好吃的推到对面。','warmth'],
+    ['超市门口：有人把摇摇车当成正经交通工具。','odd'],
+    ['楼顶天台，听晚上第一只蝉和最后一辆车。','scenery'],
+    ['雨天的窗边，有一整壶水和两把没人催的椅子。','ease']
+  ]},
+  {title:'飞碟有一只小抽屉，能带走一件地球纪念品。', prompt:'你趁舱门关上前递进去什么？', options:[
+    ['一张刚拍出来、还看不清颜色的晚霞相纸。','scenery'],
+    ['一张蜗牛过街提示牌，箭头比蜗牛走得还急。','odd'],
+    ['一条双人围巾，一头还带一点人的体温。','warmth'],
+    ['一张空白车票，背面的日期晚点填也行。','ease']
+  ]},
+  {title:'外星人要为下次见面留一个约定。', prompt:'你希望 TA 回来时对你说哪句话？', options:[
+    ['「找个地方坐。我的飞碟刚装了静音模式。」','ease'],
+    ['「我给你带了个只有三个笑点的笑话。」','odd'],
+    ['「这一趟我路过一个你肯定会喜欢的颜色。」','scenery'],
+    ['「我有两份点心，回来前一口都没偷吃。」','warmth']
+  ]}
+];
+
 const tests = {
   closure: {title:'给今天办个结案', receipt:'今日结案回执', detailLabel:'今天怎么收尾', summary:'把今天留下的几件小事，盖章结个案。', color:'#e8ff6d', profiles:closureProfiles, questions:closureQuestions,
     art:'<span class="art-receipt"><b>办妥</b></span>'},
@@ -951,7 +1059,13 @@ const tests = {
   daydream: {title:'走神时，你去了哪个平行宇宙？', receipt:'走神旅行回执', detailLabel:'到站后的第一眼', summary:'走神五秒，够坐一趟没有时刻表的车。', color:'#bee0ed', profiles:daydreamProfiles, questions:daydreamQuestions,
     art:'<span class="art-stamp art-daydream-door"><i></i></span>'},
   dessert: {title:'给今天点一份不存在的甜品', receipt:'奇怪甜品点单回执', detailLabel:'这份甜品怎么上桌', summary:'店员问，要少糖、少冰，还是少一点声音？', color:'#ffcda6', profiles:dessertProfiles, questions:dessertQuestions,
-    art:'<span class="art-stamp art-dessert"><i></i></span>'}
+    art:'<span class="art-stamp art-dessert"><i></i></span>'},
+  goose: {title:'公园的石头鹅离家出走了', receipt:'石头鹅失踪案回执', detailLabel:'遇见没头绪的事，你会怎么找', summary:'底座上写着「今天请假」，你决定先找几个目击者。', color:'#f4d07d', profiles:gooseProfiles, questions:gooseQuestions,
+    art:'<span class="art-stamp art-goose"><i></i></span>'},
+  future: {title:'在便利店撞见明天的自己', receipt:'明天的便利店小票', detailLabel:'你做选择时的习惯', summary:'明天的你把最后一个布丁拿走了。要不要问问？', color:'#efc1e4', profiles:futureProfiles, questions:futureQuestions,
+    art:'<span class="art-stamp art-future"><b>?</b></span>'},
+  earth: {title:'外星人只给你十秒介绍地球', receipt:'地球推荐回执', detailLabel:'你想留住的那部分生活', summary:'飞碟随时起飞。你会用什么说服 TA 再来一次？', color:'#bef0c8', profiles:earthProfiles, questions:earthQuestions,
+    art:'<span class="art-stamp art-ufo"><i></i></span>'}
 };
 const publicUrl = 'https://hlee67567-maker.github.io/msb/';
 const qrRows = [
@@ -997,6 +1111,10 @@ let position = 0;
 let answers = [];
 let selectedProfile = null;
 const hallCards = Object.entries(tests);
+for (let i = hallCards.length - 1; i > 0; i--) {
+  const swap = Math.floor(Math.random() * (i + 1));
+  [hallCards[i], hallCards[swap]] = [hallCards[swap], hallCards[i]];
+}
 const hallBatchSize = 3;
 const hallBatchCount = Math.ceil(hallCards.length / hallBatchSize);
 let hallBatch = 0;
