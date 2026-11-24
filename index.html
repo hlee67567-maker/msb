@@ -456,9 +456,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--violet); outlin
 .prompt { margin:10px 0 0; line-height:1.5; }
 .options { display:grid; gap:8px; }
 .option { display:flex; align-items:center; gap:12px; min-height:55px; padding:10px 13px; border:1px solid #b9aac9; border-radius:11px; background:#fffdf8; color:var(--ink); text-align:left; line-height:1.4; font-weight:680; }
-.option:hover, .option[aria-pressed="true"] { background:#eadefe; border-color:var(--violet); }
+.option[aria-pressed="true"] { background:#eadefe; border-color:var(--violet); }
 .key { display:grid; place-items:center; flex:0 0 31px; height:31px; border-radius:7px; background:#efe6ff; color:var(--violet); font:900 .86rem ui-monospace,monospace; }
-.option:hover .key, .option[aria-pressed="true"] .key { background:var(--lime); }
+.option[aria-pressed="true"] .key { background:var(--lime); }
+@media (hover:hover) and (pointer:fine) {
+  .option[aria-pressed="false"]:hover { border-color:#8972a6; }
+}
 .primary, .secondary, .quiet { min-height:46px; padding:11px 16px; border-radius:100px; font-weight:850; }
 .primary { background:var(--lime); color:var(--ink); border:1.5px solid var(--ink); box-shadow:3px 3px var(--ink); }
 .primary:active { transform:translate(2px,2px); box-shadow:1px 1px var(--ink); }
