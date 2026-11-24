@@ -481,6 +481,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--violet); outlin
 .card-body { padding:clamp(17px,3.6vw,34px) clamp(17px,4vw,36px); background:var(--card); }
 .receipt-top { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:72px; margin-bottom:9px; }
 .receipt-kind { color:var(--ink); font-weight:820; font-size:.84rem; margin:0; }
+.receipt-stamp { display:table; margin-top:8px; padding:2px 7px; border:1px solid currentColor; border-radius:5px; color:#653e88; background:#fffdf8; font-size:.73rem; letter-spacing:.08em; transform:rotate(-5deg); }
 .result-symbol {
   display:grid; place-items:center; flex:none; width:clamp(63px,9vw,91px); aspect-ratio:1;
   border:1.5px solid var(--ink); border-radius:50%; outline:1px dashed #200d3780; outline-offset:5px;
@@ -1176,19 +1177,26 @@ const reunionProfiles = {
     title:'白小纯 · 先递零食派', insight:'你更愿意先做件小事，让朋友知道你在。',
     line:'全车都在等名场面。\n你把自己那袋零食推过去，问要不要吃。', scene:'你常用一点实际行动打破冷场。帮人留座、递口水、喊一句一起走，都是重新搭上话的开始。',
     habit:'今天一起吃了点东西，也算好好见过面。', color:'#e8eead', symbol:'♡'
+  },
+  duckTongue: {
+    title:'袋底最后一根鸭舌', receipt:'隐藏回执', stamp:'全程在袋', detailLabel:'你的吃瓜方式',
+    insight:'你是默默吃瓜、随时能接上前情的那位。',
+    line:'我在袋底等了三集。\n吃我之前，能先把刚才那句说完吗，厉娜？',
+    scene:'群里很少冒泡。朋友一问「怎么回事」，你能从第一集讲起。',
+    habit:'想听下一集？撕开另一包。', color:'#ffe2a8', symbol:'🦆'
   }
 };
 
 const reunionQuestions = [
   {title:'老友旅行的集合消息，停在「收到」。', prompt:'上次你们好好聊天已经是好几年前。你准备怎么破冰？', options:[
-    ['先发一句，我其实一直惦记着上次那件事。','lina'],
+    ['先挑个能看见全车的座位，坐下等大家开聊。','duckTongue'],
     ['翻出以前那首合唱，发给对方一句还记得吗。','xufei'],
     ['问问对方要不要比大家早到十分钟，单独聊聊。','matianyu'],
     ['带一包对方爱吃的，见面先从分零食开始。','baixiaochun']
   ]},
   {title:'饭桌零帧静音，只剩下拆包装的声音。', prompt:'刚才有人提起了一件旧事，筷子突然都挺忙。', options:[
     ['先给大家续水、分点吃的，缓一缓再聊。','baixiaochun'],
-    ['把这句想说的话先记下来，准备好再开口。','xufei'],
+    ['低头拆零食，顺便把刚才那句听完。','duckTongue'],
     ['直接接住话题，说一句我一直想知道你怎么想。','lina'],
     ['给对面发条消息，饭后要不要一起出去走走。','matianyu']
   ]},
@@ -1196,20 +1204,25 @@ const reunionQuestions = [
     ['写一张押韵的小纸条，把名字放进副歌里。','xufei'],
     ['回一句「你有话可以直说，小陈本人在此」。','lina'],
     ['把座位留好了，拍张图回他「人和零食都到位」。','baixiaochun'],
-    ['发个靠窗位置，约对方旁边坐，省得隔着群聊。','matianyu']
+    ['在输入框打了个句号，删掉，继续等下一句。','duckTongue']
   ]},
   {title:'返程前，大家说要给友情留个纪念。', prompt:'每人只能往信封里塞一样东西，你放什么？', options:[
     ['两张还没用的电影票。下次约个能单聊的场。','matianyu'],
-    ['老友最喜欢的零食口味。下次见面还带这个。','baixiaochun'],
+    ['一只空零食袋。最后一口谁吃的，里面没写。','duckTongue'],
     ['一句这次真的说出口的话，连日期一起写上。','lina'],
     ['一段没录完的旋律。下次见面把后半段唱完。','xufei']
   ]}
 ];
 
+function pickReunionProfile(picks) {
+  const guestPicks = picks.filter(pick => pick !== 'duckTongue');
+  return picks.length - guestPicks.length >= 3 ? 'duckTongue' : pickProfile(guestPicks);
+}
+
 const tests = {
   zodiac: {title:'十二星座掉进零食柜，你是哪一颗？', receipt:'今日零食星座回执', detailLabel:'你的今日星座模式', summary:'做五道奇怪的小题，看看你今天最像哪颗零食星座。', color:'#eee2fb', profiles:zodiacProfiles, questions:zodiacQuestions, pickResult:pickZodiacSign,
     art:'<span class="art-stamp art-tiny-joy"><b>✦</b></span>'},
-  reunion: {title:'上《后会友期》的车，你更像谁？', receipt:'《后会友期》观众脑洞回执', detailLabel:'你和老朋友相处的方式', summary:'给四位嘉宾的节目片段写了四道老友小题，纯属观众脑洞。', color:'#f5d8c6', profiles:reunionProfiles, questions:reunionQuestions,
+  reunion: {title:'上《后会友期》的车，你更像谁？', receipt:'《后会友期》观众脑洞回执', detailLabel:'你和老朋友相处的方式', summary:'给四位嘉宾的节目片段写了四道老友小题，纯属观众脑洞。', color:'#f5d8c6', profiles:reunionProfiles, questions:reunionQuestions, pickResult:pickReunionProfile,
     art:'<span class="art-stamp art-receipt"><b>♡</b></span>'},
   closure: {title:'给今天办个结案', receipt:'今日结案回执', detailLabel:'今天怎么收尾', summary:'把今天留下的几件小事，盖章结个案。', color:'#e8ff6d', profiles:closureProfiles, questions:closureQuestions,
     art:'<span class="art-receipt"><b>办妥</b></span>'},
@@ -1435,11 +1448,11 @@ function result() {
   const brand = document.querySelector('.site-header .brand').innerHTML;
   show(`<section class="result"><article class="result-card" style="--card:${p.color}">
     <div class="brand">${brand}</div>
-    <div class="card-body"><div class="receipt-top"><p class="receipt-kind">${activeTest.receipt}</p><span class="result-symbol" aria-hidden="true">${p.symbol}</span></div><h2 tabindex="-1">${p.title}</h2><p class="result-insight">${p.insight}</p><p class="card-line">${p.line}</p><p class="receipt-note"><b>办事员备注</b>${p.habit}</p></div>
+    <div class="card-body"><div class="receipt-top"><p class="receipt-kind">${p.receipt || activeTest.receipt}${p.stamp ? `<span class="receipt-stamp">${p.stamp}</span>` : ''}</p><span class="result-symbol" aria-hidden="true">${p.symbol}</span></div><h2 tabindex="-1">${p.title}</h2><p class="result-insight">${p.insight}</p><p class="card-line">${p.line}</p><p class="receipt-note"><b>办事员备注</b>${p.habit}</p></div>
     <div class="card-bottom"><p>扫码办自己的小事</p>
       <a href="${publicUrl}" aria-label="打开没事办事处大厅"><canvas class="qr" width="225" height="225" aria-hidden="true"></canvas></a></div>
     </article><div class="result-copy">
-    <p class="detail"><strong>${activeTest.detailLabel}</strong>${p.scene}</p>
+    <p class="detail"><strong>${p.detailLabel || activeTest.detailLabel}</strong>${p.scene}</p>
     <div class="actions"><button class="primary" data-action="save">保存结果卡</button><button class="secondary" data-action="catalog">回大厅办别的事</button><button class="quiet" data-action="restart">重新测试</button><button class="quiet" data-action="share">分享链接</button></div>
     <p class="notice" role="status"></p></div></section>`);
   drawQr(stage.querySelector('.qr').getContext('2d'), 0, 0, 225);
@@ -1526,7 +1539,15 @@ function drawCard(profile, receipt) {
 
   ctx.fillStyle = ink;
   ctx.font = '850 37px system-ui, sans-serif';
-  ctx.fillText(receipt, 76, 274);
+  ctx.fillText(profile.receipt || receipt, 76, 274);
+  if (profile.stamp) {
+    ctx.font = '850 28px system-ui, sans-serif';
+    ctx.fillStyle = paper;
+    roundedFill(ctx, 76, 301, ctx.measureText(profile.stamp).width + 30, 42, 9);
+    ctx.fillStyle = '#653e88';
+    ctx.fillText(profile.stamp, 91, 331);
+    ctx.fillStyle = ink;
+  }
   ctx.strokeStyle = '#200d3780';
   ctx.lineWidth = 3;
   ctx.setLineDash([9, 10]);
