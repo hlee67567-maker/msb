@@ -489,6 +489,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--violet); outlin
 }
 .result-card h2 { font-size:clamp(1.65rem,4.25vw,3.45rem); line-height:1.1; }
 .card-line { font-size:clamp(1rem,2vw,1.2rem); font-weight:725; line-height:1.48; white-space:pre-line; margin:10px 0 0; }
+.result-insight { margin:10px 0 0; color:#432174; font-size:1.08rem; font-weight:800; line-height:1.45; }
 .receipt-note { margin:18px 0 0; padding:10px 13px; border-radius:10px; background:#fffdf8b8; font-size:.9rem; line-height:1.5; }
 .receipt-note b { display:block; margin-bottom:3px; color:#432174; font-size:.77rem; }
 .card-bottom { display:flex; gap:14px; align-items:center; justify-content:space-between; border-top:1px dashed #200d376b; padding:12px clamp(17px,4vw,36px); }
@@ -663,21 +664,25 @@ updateDailyNote();
 
 const profiles = {
   familiar: {
+    insight:'跟熟人待在一起，你才容易聊开。',
     title: '熟人快充型', line: '群里常年潜水，\n见到自己人能聊到店员叠椅子。',
     scene: '跟一个懂你梗的人吃宵夜，冷场了就一起吃。',
     habit: '约到一个想见的人，就算办成一件大事。', color: '#e1ff55', symbol: '✦'
   },
   solo: {
+    insight:'独处一会儿，你的社交电量就会回来。',
     title: '回家满电型', line: '散场时真心说下次再约，\n进家门时也真心觉得太好了。',
     scene: '散场回家的那段路。耳机有电，群聊静音。',
     habit: '回家以后先归你自己。消息可以排到明天。', color: '#c8b1ff', symbol: '☾'
   },
   crowd: {
+    insight:'人一多、话题一热闹，你反而更有劲。',
     title: '人群发电型', line: '说好只坐五分钟，\n下一摊的地址已经是你发的。',
     scene: '一桌人在聊三件事，你每边都赶得上接一句。',
     habit: '还想再坐会儿就坐会儿。开心可以超时。', color: '#ffae82', symbol: '✷'
   },
   flexible: {
+    insight:'你喜欢随时能加入，也随时能离开的聚会。',
     title: '随机切换型', line: '上一秒在拍全员合照，\n下一秒已经在门口等车。',
     scene: '随时可以来，也可以随时撤，身边人都懂。',
     habit: '想续摊和想回家，都不用提前交说明。', color: '#a7dcf4', symbol: '↯'
@@ -716,10 +721,10 @@ const questions = [
   ]}
 ];
 const weekendProfiles = {
-  nest: {title:'被窝续命型', line:'本周最后一项行程，\n是从床的左边滚到右边。', scene:'手机静音，晚饭随便，片尾曲响了再决定要不要起身。', habit:'睡到自然醒，也算按计划过了周末。', color:'#d6c0ff', symbol:'☾'},
-  wander: {title:'街角寻宝型', line:'出门只是为了买杯喝的，\n回来时多了三家店的收藏。', scene:'挑一条没走过的街，进门前还不知道下一站。', habit:'出门只买了杯喝的，也算有所收获。', color:'#ffc4a4', symbol:'✷'},
-  focus: {title:'小事收工型', line:'只想收拾一个抽屉，\n最后整个桌面都被你重启了。', scene:'开着喜欢的歌，把拖了一周的小事做掉一件。', habit:'整理完一个抽屉，其余抽屉可以下周再说。', color:'#e8ff6d', symbol:'✦'},
-  gather: {title:'搭子约起型', line:'本来只在群里问一句吃啥，\n三个小时后桌上多了四双筷子。', scene:'找几个好相处的人碰个头，两句近况就能聊出下一顿饭。', habit:'约不上也没事。那个人下次还有空。', color:'#a9e6eb', symbol:'↯'}
+  nest: {insight:'周末待在家慢慢歇，你最容易恢复精力。', title:'被窝续命型', line:'本周最后一项行程，\n是从床的左边滚到右边。', scene:'手机静音，晚饭随便，片尾曲响了再决定要不要起身。', habit:'睡到自然醒，也算按计划过了周末。', color:'#d6c0ff', symbol:'☾'},
+  wander: {insight:'随便逛点新地方，你会觉得又有精神了。', title:'街角寻宝型', line:'出门只是为了买杯喝的，\n回来时多了三家店的收藏。', scene:'挑一条没走过的街，进门前还不知道下一站。', habit:'出门只买了杯喝的，也算有所收获。', color:'#ffc4a4', symbol:'✷'},
+  focus: {insight:'做完一件拖了很久的小事，你就能松口气。', title:'小事收工型', line:'只想收拾一个抽屉，\n最后整个桌面都被你重启了。', scene:'开着喜欢的歌，把拖了一周的小事做掉一件。', habit:'整理完一个抽屉，其余抽屉可以下周再说。', color:'#e8ff6d', symbol:'✦'},
+  gather: {insight:'和好相处的人见个面，你就能充上电。', title:'搭子约起型', line:'本来只在群里问一句吃啥，\n三个小时后桌上多了四双筷子。', scene:'找几个好相处的人碰个头，两句近况就能聊出下一顿饭。', habit:'约不上也没事。那个人下次还有空。', color:'#a9e6eb', symbol:'↯'}
 };
 const weekendQuestions = [
   {title:'周六醒来，发现已经 11:42。', prompt:'你的第一条周末指令是什么？', options:[
@@ -754,10 +759,10 @@ const weekendQuestions = [
   ]}
 ];
 const closureProfiles = {
-  tomorrow: {title:'余事明天再办', line:'今天可以到这儿了。\n剩下的事明天继续排队。', scene:'想停一下时就停一下。明早还会有一张新的待办清单。', habit:'剩下的事没有跑掉。明天再找它们。', color:'#d8c6ff', symbol:'☾'},
-  saved: {title:'小事存档成功', line:'今天有一件小事，\n经过本人同意，值得留着。', scene:'想起一顿好吃的、一个笑话，或者刚好赶上的绿灯。', habit:'顺利的事再小，也够当一条今日新闻。', color:'#e8ff6d', symbol:'✦'},
-  rest: {title:'今晚提早打烊', line:'本人今晚暂停营业。\n睡衣已经替我签字。', scene:'灯关小一点，脚伸直一点，没人等你交作业。', habit:'休息这件事，办妥了就行。', color:'#acdfe8', symbol:'↯'},
-  thanks: {title:'有人陪着结案', line:'今天的手续确实有点多。\n还好有人陪你等了一会儿。', scene:'一起吃一口热的，或者收一条刚好出现的消息。', habit:'有力气就说声谢谢。没力气，心里记着也可以。', color:'#ffc4a4', symbol:'✷'}
+  tomorrow: {insight:'今天想把剩下的事留给明天。', title:'余事明天再办', line:'今天可以到这儿了。\n剩下的事明天继续排队。', scene:'想停一下时就停一下。明早还会有一张新的待办清单。', habit:'剩下的事没有跑掉。明天再找它们。', color:'#d8c6ff', symbol:'☾'},
+  saved: {insight:'你会记一件小开心，给今天收尾。', title:'小事存档成功', line:'今天有一件小事，\n经过本人同意，值得留着。', scene:'想起一顿好吃的、一个笑话，或者刚好赶上的绿灯。', habit:'顺利的事再小，也够当一条今日新闻。', color:'#e8ff6d', symbol:'✦'},
+  rest: {insight:'忙完一天，你最想安静歇一会儿。', title:'今晚提早打烊', line:'本人今晚暂停营业。\n睡衣已经替我签字。', scene:'灯关小一点，脚伸直一点，没人等你交作业。', habit:'休息这件事，办妥了就行。', color:'#acdfe8', symbol:'↯'},
+  thanks: {insight:'和人说说话，今天就算好好过完了。', title:'有人陪着结案', line:'今天的手续确实有点多。\n还好有人陪你等了一会儿。', scene:'一起吃一口热的，或者收一条刚好出现的消息。', habit:'有力气就说声谢谢。没力气，心里记着也可以。', color:'#ffc4a4', symbol:'✷'}
 };
 const closureQuestions = [
   {title:'今天还有一格待办没打勾。', prompt:'你打算怎么处理？', options:[
@@ -781,10 +786,10 @@ const closureQuestions = [
 ];
 
 const replyProfiles = {
-  draft: {title:'脑内回复已送达', line:'你已经在心里回了三遍。\n第四遍可以留给打字。', scene:'先在备忘录里打个草稿，发不发晚点再定。', habit:'想过怎么回，也算处理过这件事。', color:'#d8c6ff', symbol:'✎'},
-  short: {title:'短回执已受理', line:'先回一句「我看到了」。\n后续内容择日补齐。', scene:'用一句「我明天仔细看」给自己留个时间。', habit:'一句话够用的时候，一句话就够了。', color:'#e8ff6d', symbol:'✦'},
-  window: {title:'明日窗口再开', line:'今天的消息窗口已关。\n明天见，真的明天见。', scene:'在合适的地方说清什么时候能回，然后把手机放下。', habit:'有空再回这句话，可以算数。', color:'#acdfe8', symbol:'☾'},
-  soft: {title:'一颗表情已寄出', line:'字没打出来。\n但那只点头的小狗已经到场。', scene:'熟人之间，发个表情先打声招呼。', habit:'让对方知道你在，有时一个点头就行。', color:'#ffc7d7', symbol:'♡'}
+  draft: {insight:'你想先把话想清楚，再决定怎么回。', title:'脑内回复已送达', line:'你已经在心里回了三遍。\n第四遍可以留给打字。', scene:'先在备忘录里打个草稿，发不发晚点再定。', habit:'想过怎么回，也算处理过这件事。', color:'#d8c6ff', symbol:'✎'},
+  short: {insight:'你会先回一句，给自己多留点时间。', title:'短回执已受理', line:'先回一句「我看到了」。\n后续内容择日补齐。', scene:'用一句「我明天仔细看」给自己留个时间。', habit:'一句话够用的时候，一句话就够了。', color:'#e8ff6d', symbol:'✦'},
+  window: {insight:'你喜欢约个能专心看消息的时间再回。', title:'明日窗口再开', line:'今天的消息窗口已关。\n明天见，真的明天见。', scene:'在合适的地方说清什么时候能回，然后把手机放下。', habit:'有空再回这句话，可以算数。', color:'#acdfe8', symbol:'☾'},
+  soft: {insight:'遇到熟人，你常用表情轻轻接住话头。', title:'一颗表情已寄出', line:'字没打出来。\n但那只点头的小狗已经到场。', scene:'熟人之间，发个表情先打声招呼。', habit:'让对方知道你在，有时一个点头就行。', color:'#ffc7d7', symbol:'♡'}
 };
 const replyQuestions = [
   {title:'洗完澡，手机亮起「在吗？」', prompt:'你会先做哪件事？', options:[
@@ -808,10 +813,10 @@ const replyQuestions = [
 ];
 
 const houseSpriteProfiles = {
-  sofa: {title:'沙发缝吞吞怪', line:'吃掉耳机、遥控器和半包饼干。\n只吐出你三年前的发圈。', scene:'一切从「刚刚还在这儿」开始。失物在它肚子里自有一套摆法。', habit:'丢了就晚点找。先在沙发上坐一会儿也行。', color:'#d8c6ff', symbol:'◉'},
-  chair: {title:'椅背衣服山精', line:'吸收穿过一次的衣服。\n每到换季，悄悄长高两厘米。', scene:'它最喜欢晚上十点。你脱下外套，它就有了今天的新一层。', habit:'允许一把椅子有两种用途。', color:'#ffc7d7', symbol:'△'},
-  fridge: {title:'冰箱灯小夜怪', line:'食物没变。\n你每开一次门，它还是会为你亮一次。', scene:'它知道你半夜第三次来找东西。有时想要的是布丁，有时只想看看灯。', habit:'两口冷布丁，也算给今天留了点甜。', color:'#acdfe8', symbol:'✦'},
-  sock: {title:'单只袜子逃跑精', line:'成双出门，单只回来。\n另一只正在沙滩上晒脚趾。', scene:'它的老家可能在滚筒洗衣机后面。至于为什么要逃，可能单纯想去看看。', habit:'两只袜子花色不一样，今天也可以照常出门。', color:'#e8ff6d', symbol:'♡'}
+  sofa: {insight:'小东西随手一放，你经常转头就忘了。', title:'沙发缝吞吞怪', line:'吃掉耳机、遥控器和半包饼干。\n只吐出你三年前的发圈。', scene:'一切从「刚刚还在这儿」开始。失物在它肚子里自有一套摆法。', habit:'丢了就晚点找。先在沙发上坐一会儿也行。', color:'#d8c6ff', symbol:'◉'},
+  chair: {insight:'你爱把还要再穿的衣服留在手边。', title:'椅背衣服山精', line:'吸收穿过一次的衣服。\n每到换季，悄悄长高两厘米。', scene:'它最喜欢晚上十点。你脱下外套，它就有了今天的新一层。', habit:'允许一把椅子有两种用途。', color:'#ffc7d7', symbol:'△'},
+  fridge: {insight:'你喜欢在冰箱里给自己留点小零嘴。', title:'冰箱灯小夜怪', line:'食物没变。\n你每开一次门，它还是会为你亮一次。', scene:'它知道你半夜第三次来找东西。有时想要的是布丁，有时只想看看灯。', habit:'两口冷布丁，也算给今天留了点甜。', color:'#acdfe8', symbol:'✦'},
+  sock: {insight:'找不到另一只袜子，你也能凑一双出门。', title:'单只袜子逃跑精', line:'成双出门，单只回来。\n另一只正在沙滩上晒脚趾。', scene:'它的老家可能在滚筒洗衣机后面。至于为什么要逃，可能单纯想去看看。', habit:'两只袜子花色不一样，今天也可以照常出门。', color:'#e8ff6d', symbol:'♡'}
 };
 const houseSpriteQuestions = [
   {title:'凌晨一点，客厅传来一声很小的「咚」。', prompt:'你觉得是谁在偷偷干什么？', options:[
@@ -835,10 +840,10 @@ const houseSpriteQuestions = [
 ];
 
 const tinyJoyProfiles = {
-  appetite: {title:'一口好吃归档', line:'今天的高光温度刚好，\n趁热吃，趁热记一笔。', scene:'楼下热腾腾的一口，或者回家路上一杯刚好喜欢的。', habit:'今天的好事可以小到只剩一口。', color:'#ffc4a4', symbol:'✷'},
-  glance: {title:'路过风景收录', line:'本来只是走这条路，\n抬头多看了一会儿。', scene:'窗台、树影和云都可能入选，拍不到也算看见了。', habit:'没有照片的小事，也可以被记住。', color:'#acdfe8', symbol:'✦'},
-  smooth: {title:'微型顺利盖章', line:'错过的事照样不少。\n今天这件刚刚好赶上。', scene:'电梯刚到、绿灯刚亮，或者想买的东西刚好剩最后一个。', habit:'刚刚好就是一条新闻，值得有个版面。', color:'#e8ff6d', symbol:'✓'},
-  care: {title:'好意签收完毕', line:'有人顺手替你留了一份。\n这件小事可以留很久。', scene:'有人替你留了座，或者看到一张图就想起你。', habit:'好意收下就行，回礼可以等到有空。', color:'#ffc7d7', symbol:'♡'}
+  appetite: {insight:'吃到喜欢的东西，你的一天就亮了一点。', title:'一口好吃归档', line:'今天的高光温度刚好，\n趁热吃，趁热记一笔。', scene:'楼下热腾腾的一口，或者回家路上一杯刚好喜欢的。', habit:'今天的好事可以小到只剩一口。', color:'#ffc4a4', symbol:'✷'},
+  glance: {insight:'路上突然好看的光和云，很容易让你开心。', title:'路过风景收录', line:'本来只是走这条路，\n抬头多看了一会儿。', scene:'窗台、树影和云都可能入选，拍不到也算看见了。', habit:'没有照片的小事，也可以被记住。', color:'#acdfe8', symbol:'✦'},
+  smooth: {insight:'刚刚好赶上的那些小事，最让你开心。', title:'微型顺利盖章', line:'错过的事照样不少。\n今天这件刚刚好赶上。', scene:'电梯刚到、绿灯刚亮，或者想买的东西刚好剩最后一个。', habit:'刚刚好就是一条新闻，值得有个版面。', color:'#e8ff6d', symbol:'✓'},
+  care: {insight:'被人悄悄惦记一下，你就觉得今天挺好。', title:'好意签收完毕', line:'有人顺手替你留了一份。\n这件小事可以留很久。', scene:'有人替你留了座，或者看到一张图就想起你。', habit:'好意收下就行，回礼可以等到有空。', color:'#ffc7d7', symbol:'♡'}
 };
 const tinyJoyQuestions = [
   {title:'今天的相册只剩一个空位。', prompt:'你想把它留给哪一幕？', options:[
@@ -864,10 +869,10 @@ const tinyJoyQuestions = [
 
 
 const shadowPetProfiles = {
-  bird: {title:'吃叹气的小鸟', line:'刚刚那声叹气，被它接住了。\n它打了个很小的嗝。', scene:'你靠着车窗发出一声叹气。影子里探出个小脑袋，啄了啄那口空气。', habit:'有些话叹出去，就已经算说过了。', color:'#d8c6ff', symbol:'✦'},
-  snail: {title:'背晚霞的小蜗牛', line:'那天没拍到的晚霞，\n它卷好装进壳里了。', scene:'等你有空，小蜗牛会在窗沿摊开一角，给你看那天没来得及细看的粉色。', habit:'好看的东西可以慢慢看。', color:'#ffc4a4', symbol:'◎'},
-  moth: {title:'修碎梦的小飞蛾', line:'梦到一半断了线。\n它摸黑缝了个软一点的结尾。', scene:'它从废掉的梦里剪下一小片晴天，缝在你今晚的枕头背面。', habit:'醒了只记得一点点，也够了。', color:'#bbc9f5', symbol:'☾'},
-  fish: {title:'吐笑声的小金鱼', line:'你忍住没笑的那一下，\n全被它存成了泡泡。', scene:'有朋友讲了句一本正经的怪话。你还没笑，影子里的鱼缸先咕噜了一声。', habit:'想笑就笑，省得它的泡泡越攒越多。', color:'#b3e1d4', symbol:'✷'}
+  bird: {insight:'心里有点沉时，你想被安静地陪一会儿。', title:'吃叹气的小鸟', line:'刚刚那声叹气，被它接住了。\n它打了个很小的嗝。', scene:'你靠着车窗发出一声叹气。影子里探出个小脑袋，啄了啄那口空气。', habit:'有些话叹出去，就已经算说过了。', color:'#d8c6ff', symbol:'✦'},
+  snail: {insight:'你常常从慢下来的小风景里找回好心情。', title:'背晚霞的小蜗牛', line:'那天没拍到的晚霞，\n它卷好装进壳里了。', scene:'等你有空，小蜗牛会在窗沿摊开一角，给你看那天没来得及细看的粉色。', habit:'好看的东西可以慢慢看。', color:'#ffc4a4', symbol:'◎'},
+  moth: {insight:'遇到遗憾，你会想办法给它换个结尾。', title:'修碎梦的小飞蛾', line:'梦到一半断了线。\n它摸黑缝了个软一点的结尾。', scene:'它从废掉的梦里剪下一小片晴天，缝在你今晚的枕头背面。', habit:'醒了只记得一点点，也够了。', color:'#bbc9f5', symbol:'☾'},
+  fish: {insight:'一句好笑的怪话，就能把你从烦恼里拉出来。', title:'吐笑声的小金鱼', line:'你忍住没笑的那一下，\n全被它存成了泡泡。', scene:'有朋友讲了句一本正经的怪话。你还没笑，影子里的鱼缸先咕噜了一声。', habit:'想笑就笑，省得它的泡泡越攒越多。', color:'#b3e1d4', symbol:'✷'}
 };
 const shadowPetQuestions = [
   {title:'你的影子半夜向你借了一样东西。', prompt:'你猜它借走了什么？', options:[
@@ -891,10 +896,10 @@ const shadowPetQuestions = [
 ];
 
 const daydreamProfiles = {
-  noodle: {title:'下雨就吃面国', line:'一滴雨落上屋檐，\n全城行程自动改成吃面。', scene:'公交站牌写着：番茄鸡蛋面还有七分钟到站。底下排了一队拿筷子的人。', habit:'雨停了也没关系，面还可以继续吃。', color:'#ffc7d7', symbol:'✷'},
-  cloud: {title:'云朵晚点站', line:'车还有几朵云才到。\n广播说，请放心晚一点。', scene:'月台上有几把朝着夕阳的小椅子。到站铃晚响一点，刚好能多坐一会儿。', habit:'空出来的几分钟，发呆也算用掉了。', color:'#b9def1', symbol:'☁'},
-  tiny: {title:'小事缩小镇', line:'进去时捧着一摞烦心事。\n出来时，口袋里只有三粒芝麻。', scene:'镇口有一架小秤。昨天那件想起来就脸红的事，称下来还没有一只瓜子重。', habit:'先把心里那件大事放远一点看看。', color:'#e8ff6d', symbol:'✦'},
-  sofa: {title:'沙发漂流公园', line:'沙发漂到了河中央。\n你没掌舵，它倒挺会挑风景。', scene:'路牌写着「往哪边都行」。沙发擦着芦苇转了个弯，碰巧遇到一群鸭子。', habit:'有一小段时间，你可以什么目的地都没有。', color:'#cbb9fa', symbol:'≈'}
+  noodle: {insight:'走神时，你常想到一口热的、一处暖的。', title:'下雨就吃面国', line:'一滴雨落上屋檐，\n全城行程自动改成吃面。', scene:'公交站牌写着：番茄鸡蛋面还有七分钟到站。底下排了一队拿筷子的人。', habit:'雨停了也没关系，面还可以继续吃。', color:'#ffc7d7', symbol:'✷'},
+  cloud: {insight:'脑子太忙时，你最想让时间慢一点。', title:'云朵晚点站', line:'车还有几朵云才到。\n广播说，请放心晚一点。', scene:'月台上有几把朝着夕阳的小椅子。到站铃晚响一点，刚好能多坐一会儿。', habit:'空出来的几分钟，发呆也算用掉了。', color:'#b9def1', symbol:'☁'},
+  tiny: {insight:'你希望那些放不下的小尴尬能轻一点。', title:'小事缩小镇', line:'进去时捧着一摞烦心事。\n出来时，口袋里只有三粒芝麻。', scene:'镇口有一架小秤。昨天那件想起来就脸红的事，称下来还没有一只瓜子重。', habit:'先把心里那件大事放远一点看看。', color:'#e8ff6d', symbol:'✦'},
+  sofa: {insight:'你想暂时松开计划，看看会遇到什么。', title:'沙发漂流公园', line:'沙发漂到了河中央。\n你没掌舵，它倒挺会挑风景。', scene:'路牌写着「往哪边都行」。沙发擦着芦苇转了个弯，碰巧遇到一群鸭子。', habit:'有一小段时间，你可以什么目的地都没有。', color:'#cbb9fa', symbol:'≈'}
 };
 const daydreamQuestions = [
   {title:'走神五秒，你面前多了一张车票。', prompt:'票面上只有一行小字。你想读到哪句？', options:[
@@ -918,10 +923,10 @@ const daydreamQuestions = [
 ];
 
 const dessertProfiles = {
-  pudding: {title:'静音云朵布丁', line:'勺子碰到碟子的那一声，\n是今天最后一条通知。', scene:'布丁端上来还在晃。吃第一口时，连窗外那辆自行车的铃都轻了一点。', habit:'想一个人安安静静吃完，也可以。', color:'#d8c6ff', symbol:'☾'},
-  cookie: {title:'爆笑夹心饼干', line:'饼干先裂开了。\n你可以跟着笑两声。', scene:'掰开夹心，有个烂笑话滚出来。明明不太好笑，旁边的人还是笑得更大声。', habit:'笑过一下，今天就有一格亮起来。', color:'#ffd6a5', symbol:'✷'},
-  layer: {title:'小事庆功千层', line:'每一层都夹着一件小事。\n有一层只写着「准时吃了饭」。', scene:'你把今天夸张地吹成一件大事，最后切出一小块刚刚好的庆功蛋糕。', habit:'值得庆祝的，可以小到一叉子就吃完。', color:'#e8ff6d', symbol:'✦'},
-  moon: {title:'晚安月亮冰淇淋', line:'挖到最后一口时，\n盒底粘着一张「今天辛苦啦」。', scene:'小月亮只在快打烊时端上来。它有一点点凉，吃完你刚好想去洗个热水澡。', habit:'今晚先说晚安，别的可以等天亮。', color:'#b8e0ed', symbol:'♡'}
+  pudding: {insight:'今天的你想安静一下，给脑子放个假。', title:'静音云朵布丁', line:'勺子碰到碟子的那一声，\n是今天最后一条通知。', scene:'布丁端上来还在晃。吃第一口时，连窗外那辆自行车的铃都轻了一点。', habit:'想一个人安安静静吃完，也可以。', color:'#d8c6ff', symbol:'☾'},
+  cookie: {insight:'今天有个好笑的小插曲，你就能缓过来。', title:'爆笑夹心饼干', line:'饼干先裂开了。\n你可以跟着笑两声。', scene:'掰开夹心，有个烂笑话滚出来。明明不太好笑，旁边的人还是笑得更大声。', habit:'笑过一下，今天就有一格亮起来。', color:'#ffd6a5', symbol:'✷'},
+  layer: {insight:'哪怕只做成一件小事，你也想庆祝一下。', title:'小事庆功千层', line:'每一层都夹着一件小事。\n有一层只写着「准时吃了饭」。', scene:'你把今天夸张地吹成一件大事，最后切出一小块刚刚好的庆功蛋糕。', habit:'值得庆祝的，可以小到一叉子就吃完。', color:'#e8ff6d', symbol:'✦'},
+  moon: {insight:'今天想早点收尾，给自己留一个慢晚上。', title:'晚安月亮冰淇淋', line:'挖到最后一口时，\n盒底粘着一张「今天辛苦啦」。', scene:'小月亮只在快打烊时端上来。它有一点点凉，吃完你刚好想去洗个热水澡。', habit:'今晚先说晚安，别的可以等天亮。', color:'#b8e0ed', symbol:'♡'}
 };
 const dessertQuestions = [
   {title:'一间甜品店今晚只接受奇怪的点单方式。', prompt:'你把哪张纸条递给店员？', options:[
@@ -946,10 +951,10 @@ const dessertQuestions = [
 
 
 const gooseProfiles = {
-  trace: {title:'泥点证词收藏家', line:'别人盯着空掉的底座。\n你发现泥脚印有一只是倒着的。', scene:'遇到没头绪的事，你喜欢先捡起一件确定的小事。拼起来的过程比一口气猜中更过瘾。', habit:'今天找到一粒泥点就算有进展。鹅可以明天再找。', color:'#e8ff6d', symbol:'✦'},
-  theory: {title:'先画结局的人', line:'鹅还没找到。\n你已经为它构思了两份简历。', scene:'线索越少，你脑内的地图越大。你往往靠一个有点离谱的假设找到新的路。', habit:'先猜一个好玩的版本，猜错了也多了个故事。', color:'#d8c6ff', symbol:'✎'},
-  crew: {title:'临时鹅友会会长', line:'你只问了句「要不要一起找？」\n下一秒，连卖玉米的都带上了望远镜。', scene:'遇到一团乱麻，你会先拉把椅子给别人。事情有人一起琢磨，难度就先降了一格。', habit:'找不到鹅，也可以请搭子一起吃根玉米。', color:'#ffc7d7', symbol:'♡'},
-  bench: {title:'长椅旁听员', line:'全公园都在追鹅。\n你坐在原地，等它自己讲完。', scene:'局面越吵，你越习惯留一点空。等别人说完、心跳慢下来，有些答案就从背景里浮出来了。', habit:'顾不上想明白的时候，先挑一张晒得到太阳的椅子。', color:'#b3e1d4', symbol:'☀'}
+  trace: {insight:'遇到没头绪的事，你会先找线索。', title:'泥点证词收藏家', line:'别人盯着空掉的底座。\n你发现泥脚印有一只是倒着的。', scene:'遇到没头绪的事，你喜欢先捡起一件确定的小事。拼起来的过程比一口气猜中更过瘾。', habit:'今天找到一粒泥点就算有进展。鹅可以明天再找。', color:'#e8ff6d', symbol:'✦'},
+  theory: {insight:'遇到没头绪的事，你会先猜一种可能。', title:'先画结局的人', line:'鹅还没找到。\n你已经为它构思了两份简历。', scene:'线索越少，你脑内的地图越大。你往往靠一个有点离谱的假设找到新的路。', habit:'先猜一个好玩的版本，猜错了也多了个故事。', color:'#d8c6ff', symbol:'✎'},
+  crew: {insight:'遇到没头绪的事，你会先找人一起想。', title:'临时鹅友会会长', line:'你只问了句「要不要一起找？」\n下一秒，连卖玉米的都带上了望远镜。', scene:'遇到一团乱麻，你会先拉把椅子给别人。事情有人一起琢磨，难度就先降了一格。', habit:'找不到鹅，也可以请搭子一起吃根玉米。', color:'#ffc7d7', symbol:'♡'},
+  bench: {insight:'遇到没头绪的事，你会先等等看。', title:'长椅旁听员', line:'全公园都在追鹅。\n你坐在原地，等它自己讲完。', scene:'局面越吵，你越习惯留一点空。等别人说完、心跳慢下来，有些答案就从背景里浮出来了。', habit:'顾不上想明白的时候，先挑一张晒得到太阳的椅子。', color:'#b3e1d4', symbol:'☀'}
 };
 const gooseQuestions = [
   {title:'公园的石头鹅不见了。', prompt:'底座只剩一张歪歪扭扭的「今天请假」。你先做什么？', options:[
@@ -979,10 +984,10 @@ const gooseQuestions = [
 ];
 
 const futureProfiles = {
-  plan: {title:'备用小票派', line:'你拿走了一张小票。\n背面写着三条不同的回家路线。', scene:'你愿意去试新东西，只是喜欢先留一条回来得及的路。知道最坏会怎样以后，反而更容易出门。', habit:'留一个备用选项就够了，小票背面可以空一点。', color:'#b9def1', symbol:'▤'},
-  leap: {title:'盲袋当场拆派', line:'明天的你话还没讲完。\n你已经拆开了未知口味。', scene:'你经常靠亲手试一把来做决定。比起想出最完美的答案，你更信拆开之后的第一口。', habit:'想试就试一点点，一包可以分两天拆。', color:'#ffc4a4', symbol:'✷'},
-  feeling: {title:'听半句话派', line:'你没问明天会发生什么。\n你先问「你现在累不累？」', scene:'做选择时，你会先听听自己和身边的人是什么感觉。哪怕只有一句「这个听起来有点勉强」，也算一条线索。', habit:'心里那句小声的话，也可以把它听完。', color:'#ffc7d7', symbol:'♡'},
-  pause: {title:'先吹会儿冷气派', line:'未来就站在你对面。\n你们在冰柜前多站了一分钟。', scene:'当每个选项都像在催你，你会退半步。很多决定在搁一会儿之后，自己就没那么难做了。', habit:'有些事不用当场结账，先出去走一圈。', color:'#d8c6ff', symbol:'Ⅱ'}
+  plan: {insight:'做选择前，你喜欢先给自己留条退路。', title:'备用小票派', line:'你拿走了一张小票。\n背面写着三条不同的回家路线。', scene:'你愿意去试新东西，只是喜欢先留一条回来得及的路。知道最坏会怎样以后，反而更容易出门。', habit:'留一个备用选项就够了，小票背面可以空一点。', color:'#b9def1', symbol:'▤'},
+  leap: {insight:'做选择时，你常先试试看，再决定下一步。', title:'盲袋当场拆派', line:'明天的你话还没讲完。\n你已经拆开了未知口味。', scene:'你经常靠亲手试一把来做决定。比起想出最完美的答案，你更信拆开之后的第一口。', habit:'想试就试一点点，一包可以分两天拆。', color:'#ffc4a4', symbol:'✷'},
+  feeling: {insight:'拿不定主意时，你会先留意自己和别人的感受。', title:'听半句话派', line:'你没问明天会发生什么。\n你先问「你现在累不累？」', scene:'做选择时，你会先听听自己和身边的人是什么感觉。哪怕只有一句「这个听起来有点勉强」，也算一条线索。', habit:'心里那句小声的话，也可以把它听完。', color:'#ffc7d7', symbol:'♡'},
+  pause: {insight:'被催着做决定时，你会留一点时间想清楚。', title:'先吹会儿冷气派', line:'未来就站在你对面。\n你们在冰柜前多站了一分钟。', scene:'当每个选项都像在催你，你会退半步。很多决定在搁一会儿之后，自己就没那么难做了。', habit:'有些事不用当场结账，先出去走一圈。', color:'#d8c6ff', symbol:'Ⅱ'}
 };
 const futureQuestions = [
   {title:'转过冰柜，你撞见了明天的自己。', prompt:'对方穿着不同的两只袜子，手里拿着最后一个布丁。你先说什么？', options:[
@@ -1012,10 +1017,10 @@ const futureQuestions = [
 ];
 
 const earthProfiles = {
-  warmth: {title:'热饺子传教士', line:'你给外星人夹了第一只饺子。\n对方记住了「慢点，烫」。', scene:'你最舍不得的是那些不必大张旗鼓的照顾。有人留一口热的，就足够说明这颗星球为什么值得来。', habit:'今天给自己也留一口热的。', color:'#ffc4a4', symbol:'♡'},
-  odd: {title:'怪话收藏员', line:'你放了一段塑料袋追人的录像。\n外星飞船里有人笑得忘了关舱门。', scene:'你愿意把生活里那些不太讲道理的部分分享出去。一起笑过一小下，再陌生的人也能说上第二句。', habit:'遇见好笑的小事，留一句「我得讲给谁听」。', color:'#e8ff6d', symbol:'✷'},
-  scenery: {title:'晚霞加时选手', line:'十秒展示结束。\n你和外星人又一起看完了半朵云。', scene:'你容易被声音、颜色或一阵风留住。你讲喜欢的东西，常从「你仔细看」开始。', habit:'快走到家时也可以抬个头，还有最后一点光。', color:'#d8c6ff', symbol:'✦'},
-  ease: {title:'慢慢来星球居民', line:'你没抢着介绍地球。\n你让外星人先挑个舒服的地方坐。', scene:'你喜欢可以把声音放低的关系，也珍惜不用交代在干什么的时间。安静待一会儿就很够。', habit:'今天的行程可以留一格，写「坐着」。', color:'#b3e1d4', symbol:'☾'}
+  warmth: {insight:'你最想留住的是生活里那些小小的照顾。', title:'热饺子传教士', line:'你给外星人夹了第一只饺子。\n对方记住了「慢点，烫」。', scene:'你最舍不得的是那些不必大张旗鼓的照顾。有人留一口热的，就足够说明这颗星球为什么值得来。', habit:'今天给自己也留一口热的。', color:'#ffc4a4', symbol:'♡'},
+  odd: {insight:'你总想把那些没道理却好笑的事讲给别人。', title:'怪话收藏员', line:'你放了一段塑料袋追人的录像。\n外星飞船里有人笑得忘了关舱门。', scene:'你愿意把生活里那些不太讲道理的部分分享出去。一起笑过一小下，再陌生的人也能说上第二句。', habit:'遇见好笑的小事，留一句「我得讲给谁听」。', color:'#e8ff6d', symbol:'✷'},
+  scenery: {insight:'你会记住生活里一阵风、一束光这样的细节。', title:'晚霞加时选手', line:'十秒展示结束。\n你和外星人又一起看完了半朵云。', scene:'你容易被声音、颜色或一阵风留住。你讲喜欢的东西，常从「你仔细看」开始。', habit:'快走到家时也可以抬个头，还有最后一点光。', color:'#d8c6ff', symbol:'✦'},
+  ease: {insight:'你最珍惜能和人安静待着、各做各的时间。', title:'慢慢来星球居民', line:'你没抢着介绍地球。\n你让外星人先挑个舒服的地方坐。', scene:'你喜欢可以把声音放低的关系，也珍惜不用交代在干什么的时间。安静待一会儿就很够。', habit:'今天的行程可以留一格，写「坐着」。', color:'#b3e1d4', symbol:'☾'}
 };
 const earthQuestions = [
   {title:'飞碟降落，外星人只给你十秒介绍地球。', prompt:'你的手刚碰到话筒，会先放出什么？', options:[
@@ -1044,7 +1049,168 @@ const earthQuestions = [
   ]}
 ];
 
+const zodiacProfiles = {
+  aries: {
+    title:'白羊座 · 跳跳糖', insight:'有点想法，你喜欢马上试一小步。',
+    line:'你只是撕了个包装。\n隔壁以为办事处在放鞭炮。', scene:'遇到新鲜事，你通常会先试再说。别人还在讨论怎么开始，你已经试出了第一个结果。',
+    habit:'试一小口就算开张，剩下的可以晚点再拆。', color:'#ffc7bb', symbol:'♈︎'
+  },
+  leo: {
+    title:'狮子座 · 发光爆米花', insight:'遇到好玩的事，你会招呼大家一起玩。',
+    line:'一小把玉米蹦上桌。\n你顺手给它们开了个首映礼。', scene:'你很会把一件有趣的小事变成大家都能参与的事。有人一起笑，你就更有兴致。',
+    habit:'今天的聚光灯也可以照在那件小小的得意事上。', color:'#f4d07d', symbol:'♌︎'
+  },
+  sagittarius: {
+    title:'射手座 · 乱跑汽水', insight:'计划一变，你常会觉得新路线更有趣。',
+    line:'气泡都往门口跑。\n你拎上瓶盖，决定跟它们一起去。', scene:'比起按原路走到底，你喜欢在岔路上看一眼。新的玩法出现时，你很容易就想试试看。',
+    habit:'走岔路也可以，记得给自己留一口汽水。', color:'#bae5df', symbol:'♐︎'
+  },
+  capricorn: {
+    title:'摩羯座 · 坚果罐', insight:'你喜欢把乱糟糟的事拆成几步做。',
+    line:'十二颗坚果跑得满桌都是。\n你顺手给它们排了队。', scene:'有一件事能先做完，后面的事就比较好安排。碰到复杂情况，你会先从能下手的地方整理。',
+    habit:'先收好一颗坚果就行，今天不用装满整罐。', color:'#e8dfb9', symbol:'♑︎'
+  },
+  taurus: {
+    title:'金牛座 · 黄油饼干', insight:'你更容易被熟悉、舒服的小事安抚。',
+    line:'星星们新品试吃开了三轮。\n你还是回去拿了最喜欢的那块饼干。', scene:'你愿意给新东西机会，也很清楚哪种熟悉的东西最能让自己踏实。选回喜欢的口味会让你开心。',
+    habit:'喜欢的那块先吃，别留到忘了它。', color:'#f4daa5', symbol:'♉︎'
+  },
+  virgo: {
+    title:'处女座 · 分格布丁', insight:'你会留意小细节，顺手把它们理顺。',
+    line:'布丁在碗里晃了三下。\n你发现勺子放反了，给它转了个方向。', scene:'你常能看到别人忽略的小地方。手边的东西只要稍微顺一点，你就会觉得事情轻松了些。',
+    habit:'今天只整理一格，另外两格留给布丁自己晃。', color:'#e0d7fb', symbol:'♍︎'
+  },
+  libra: {
+    title:'天秤座 · 分半奶油卷', insight:'你习惯先看看同伴想要什么，再一起选。',
+    line:'奶油卷刚切开。\n你把带草莓的那头朝朋友转了过去。', scene:'跟别人一起做选择时，你会自然留意大家舒不舒服。有个两边都愿意的方案，你就更乐意推进。',
+    habit:'自己想吃草莓时，也可以直接说。', color:'#ffd5e7', symbol:'♎︎'
+  },
+  aquarius: {
+    title:'水瓶座 · 反季雪糕', insight:'大家都照着来的时候，你会冒出一个怪点子。',
+    line:'群里正在投票喝热茶。\n你提议在杯口夹一支雪糕。', scene:'你喜欢试试一种没人先提过的做法。别人可能需要半拍才能懂，但你的点子常让小事变得有趣。',
+    habit:'怪点子可以先试半份，尝过再决定要不要开摊。', color:'#c1d7ff', symbol:'♒︎'
+  },
+  gemini: {
+    title:'双子座 · 双口味软糖', insight:'你一好奇，就容易顺着话题发现新鲜事。',
+    line:'软糖一半是葡萄，一半是橘子。\n你已经开始研究第三个味道了。', scene:'聊到好玩的地方，你很自然会追问下一句。一个小话题也能把你带到意想不到的地方。',
+    habit:'今天可以多尝一种口味，也可以明天再换。', color:'#e6f1a1', symbol:'♊︎'
+  },
+  cancer: {
+    title:'巨蟹座 · 棉花糖', insight:'你常用一件小事，让在意的人觉得被照顾。',
+    line:'棉花糖烤好时，没人开口。\n你已经把最热的那根递过去了。', scene:'你很容易留意到别人需要一点安慰的时刻。暖一暖手、留一口吃的，都是你自然会做的事。',
+    habit:'记得给自己也留一根热的。', color:'#ffe4e9', symbol:'♋︎'
+  },
+  scorpio: {
+    title:'天蝎座 · 暗号巧克力', insight:'你更愿意把真心话留给信得过的人。',
+    line:'打开包装得先对一句暗号。\n暗号是你们前年一起笑了半天的梗。', scene:'对你来说，聊得深比聊得多更重要。在熟悉而可靠的人面前，你会更自在地讲心里话。',
+    habit:'今天愿意说一句就够，夹心可以慢慢拆。', color:'#d8c6fa', symbol:'♏︎'
+  },
+  pisces: {
+    title:'双鱼座 · 走神马卡龙', insight:'你容易从一个小细节想到一整个故事。',
+    line:'甜点靠在盘边睡着了。\n你已经替它梦完了一集动画。', scene:'光线、声音和一句随口的话，都可能让你开始想象。这样走神一小会儿，经常能给你补一点精神。',
+    habit:'有好玩的脑洞先记一句，故事可以以后接着编。', color:'#c7daf8', symbol:'♓︎'
+  }
+};
+
+const zodiacSigns = {
+  fire: {start:'aries', keep:'leo', change:'sagittarius'},
+  earth: {start:'capricorn', keep:'taurus', change:'virgo'},
+  air: {start:'libra', keep:'aquarius', change:'gemini'},
+  water: {start:'cancer', keep:'scorpio', change:'pisces'}
+};
+
+const zodiacQuestions = [
+  {title:'零食柜半夜抖了一下。', prompt:'你打开门，十二颗星星正在抢最后一包海苔。', options:[
+    ['先给大家拆一包新的，抢到我的就归我。','fire'],
+    ['把还没开封的都数一遍，看看够不够分。','earth'],
+    ['发起群聊投票，提名海苔当今晚的主持人。','air'],
+    ['问问最小的那颗星星，它是不是还没吃晚饭。','water']
+  ]},
+  {title:'月亮突然说，它想提前散场。', prompt:'你们刚把地垫铺好，夜宵还没上桌。', options:[
+    ['先看看月亮想回去躺着，还是想有人陪。','water'],
+    ['把夜宵打包，照着原来的人数一袋一袋分。','earth'],
+    ['提议改成「送月亮回家」，说走就走。','fire'],
+    ['问大家要不要边走边录一期「月亮为什么早退」。','air']
+  ]},
+  {title:'星星把「我到了」发在了梦里。', prompt:'你在夜宵摊等了十分钟，终于收到新消息。', options:[
+    ['和它核对路口、店招和桌号，省得它再绕。','earth'],
+    ['问它是不是太累了，先给它留把椅子。','water'],
+    ['回它「我在梦里收到了」，顺手编一个续集。','air'],
+    ['端着两串烤年糕出去接，它来了就能边走边吃。','fire']
+  ]},
+  {title:'柜门上有一张「今日份小事」的纸。', prompt:'它说，最多只能替你存下一件事。你要写什么？', options:[
+    ['群里那句念到第三遍，还是笑出来的怪话。','air'],
+    ['谁给我留了最后一口，自己说吃饱了。','water'],
+    ['我真的试了那个想了半天的小点子。','fire'],
+    ['终于找到一套能配上的保鲜盒和盖子。','earth']
+  ]},
+  {title:'散场前，有颗星星想跟你回家。', prompt:'它让你给它挑个今晚的落脚点。', options:[
+    ['放在门口，明天早上第一个见到它。','start'],
+    ['放在一直用的杯子旁，留一个固定位置。','keep'],
+    ['先带着到处转一圈，哪里舒服就停哪里。','change']
+  ]}
+];
+
+function pickZodiacSign(picks) {
+  const group = pickProfile(picks.slice(0, -1));
+  return zodiacSigns[group][picks[picks.length - 1]];
+}
+
+const reunionProfiles = {
+  lina: {
+    title:'厉娜 · 把话说开派', insight:'你会先说出在意的事，再听对方怎么想。',
+    line:'群聊里悬着一条没发的消息。\n你把它读出来，末尾还加了个名字。', scene:'如果拿到这张回执，你大概更喜欢把在意的事说出来。你可以先问一句，当时你是怎么想的？',
+    habit:'拆包零食也能缓口气，重要的话可以一句一句说。', color:'#ffc6d4', symbol:'✦'
+  },
+  xufei: {
+    title:'许飞 · 写进歌里派', insight:'你习惯先把感受整理好，再慢慢表达。',
+    line:'暖场歌单刚打开。\n你的备忘录已经多了两句副歌。', scene:'如果现场很多话挤在一起，你往往更愿意先记下来。用纸条、歌或一张照片，都能找到合适的说法。',
+    habit:'今天先记一句就好，下一句等下次见面再补。', color:'#e5d7ff', symbol:'♪'
+  },
+  matianyu: {
+    title:'马天宇 · 找个地方单聊派', insight:'你喜欢先找个安静的地方，把话聊明白。',
+    line:'一车人七嘴八舌。\n你和朋友各拎一杯茶，先去窗边站会儿。', scene:'有些话两个人聊，你反而更容易开口。把周围的声音放低一点，也比较能听清朋友的意思。',
+    habit:'邀请对方聊一会儿就行，留点空白也很舒服。', color:'#cde5f2', symbol:'☕︎'
+  },
+  baixiaochun: {
+    title:'白小纯 · 先递零食派', insight:'你更愿意先做件小事，让朋友知道你在。',
+    line:'全车都在等名场面。\n你把自己那袋零食推过去，问要不要吃。', scene:'你常用一点实际行动打破冷场。帮人留座、递口水、喊一句一起走，都是重新搭上话的开始。',
+    habit:'今天一起吃了点东西，也算好好见过面。', color:'#e8eead', symbol:'♡'
+  }
+};
+
+const reunionQuestions = [
+  {title:'老友旅行的集合消息，停在「收到」。', prompt:'上次你们好好聊天已经是好几年前。你准备怎么破冰？', options:[
+    ['先发一句，我其实一直惦记着上次那件事。','lina'],
+    ['翻出以前那首合唱，发给对方一句还记得吗。','xufei'],
+    ['问问对方要不要比大家早到十分钟，单独聊聊。','matianyu'],
+    ['带一包对方爱吃的，见面先从分零食开始。','baixiaochun']
+  ]},
+  {title:'饭桌零帧静音，只剩下拆包装的声音。', prompt:'刚才有人提起了一件旧事，筷子突然都挺忙。', options:[
+    ['先给大家续水、分点吃的，缓一缓再聊。','baixiaochun'],
+    ['把这句想说的话先记下来，准备好再开口。','xufei'],
+    ['直接接住话题，说一句我一直想知道你怎么想。','lina'],
+    ['给对面发条消息，饭后要不要一起出去走走。','matianyu']
+  ]},
+  {title:'朋友把你的名字当成了句号。', prompt:'群里变成「今晚吃什么，小陈」「给我留个靠窗座，小陈」。你怎么接？', options:[
+    ['写一张押韵的小纸条，把名字放进副歌里。','xufei'],
+    ['回一句「你有话可以直说，小陈本人在此」。','lina'],
+    ['把座位留好了，拍张图回他「人和零食都到位」。','baixiaochun'],
+    ['发个靠窗位置，约对方旁边坐，省得隔着群聊。','matianyu']
+  ]},
+  {title:'返程前，大家说要给友情留个纪念。', prompt:'每人只能往信封里塞一样东西，你放什么？', options:[
+    ['两张还没用的电影票。下次约个能单聊的场。','matianyu'],
+    ['老友最喜欢的零食口味。下次见面还带这个。','baixiaochun'],
+    ['一句这次真的说出口的话，连日期一起写上。','lina'],
+    ['一段没录完的旋律。下次见面把后半段唱完。','xufei']
+  ]}
+];
+
 const tests = {
+  zodiac: {title:'十二星座掉进零食柜，你是哪一颗？', receipt:'今日零食星座回执', detailLabel:'你的今日星座模式', summary:'做五道奇怪的小题，看看你今天最像哪颗零食星座。', color:'#eee2fb', profiles:zodiacProfiles, questions:zodiacQuestions, pickResult:pickZodiacSign,
+    art:'<span class="art-stamp art-tiny-joy"><b>✦</b></span>'},
+  reunion: {title:'上《后会友期》的车，你更像谁？', receipt:'《后会友期》观众脑洞回执', detailLabel:'你和老朋友相处的方式', summary:'给四位嘉宾的节目片段写了四道老友小题，纯属观众脑洞。', color:'#f5d8c6', profiles:reunionProfiles, questions:reunionQuestions,
+    art:'<span class="art-stamp art-receipt"><b>♡</b></span>'},
   closure: {title:'给今天办个结案', receipt:'今日结案回执', detailLabel:'今天怎么收尾', summary:'把今天留下的几件小事，盖章结个案。', color:'#e8ff6d', profiles:closureProfiles, questions:closureQuestions,
     art:'<span class="art-receipt"><b>办妥</b></span>'},
   social: {title:'你是哪种社交省电模式？', receipt:'社交省电回执', detailLabel:'你自在的相处方式', summary:'续摊、潜水、先叫车，你会怎么选？', color:'#c9b2ff', profiles, questions,
@@ -1063,7 +1229,7 @@ const tests = {
     art:'<span class="art-stamp art-daydream-door"><i></i></span>'},
   dessert: {title:'给今天点一份不存在的甜品', receipt:'奇怪甜品点单回执', detailLabel:'这份甜品怎么上桌', summary:'店员问，要少糖、少冰，还是少一点声音？', color:'#ffcda6', profiles:dessertProfiles, questions:dessertQuestions,
     art:'<span class="art-stamp art-dessert"><i></i></span>'},
-  goose: {title:'公园的石头鹅离家出走了', receipt:'石头鹅失踪案回执', detailLabel:'遇见没头绪的事，你会怎么找', summary:'底座上写着「今天请假」，你决定先找几个目击者。', color:'#f4d07d', profiles:gooseProfiles, questions:gooseQuestions,
+  goose: {title:'公园的石头鹅离家出走了', receipt:'石头鹅失踪案回执', detailLabel:'遇见没头绪的事，你会怎么找', summary:'石头鹅留了张请假条。测测遇到没头绪的小事，你会先做什么。', color:'#f4d07d', profiles:gooseProfiles, questions:gooseQuestions,
     art:'<span class="art-stamp art-goose"><i></i></span>'},
   future: {title:'在便利店撞见明天的自己', receipt:'明天的便利店小票', detailLabel:'你做选择时的习惯', summary:'明天的你把最后一个布丁拿走了。要不要问问？', color:'#efc1e4', profiles:futureProfiles, questions:futureQuestions,
     art:'<span class="art-stamp art-future"><b>?</b></span>'},
@@ -1133,7 +1299,9 @@ function show(markup, focus = true) {
 }
 function renderHallCards() {
   const first = hallBatch * hallBatchSize;
-  return hallCards.slice(first, first + hallBatchSize).map(([id, test], index) => `
+  const batch = hallCards.slice(first, first + hallBatchSize);
+  if (batch.length < hallBatchSize) batch.push(...hallCards.slice(0, hallBatchSize - batch.length));
+  return batch.map(([id, test], index) => `
     <button class="test-card" data-test="${id}" style="--cover:${test.color};--deal-delay:${index * 38}ms">
       <span class="cover" aria-hidden="true">${test.art}<span class="twinkle">✧</span></span>
       <span class="card-info"><strong>${test.title}</strong><small>${test.summary}</small><span class="mono">${test.questions.length} 道题</span></span>
@@ -1255,9 +1423,9 @@ function quiz() {
     <div class="question-heading"><h2 tabindex="-1">${question.title}</h2><p class="prompt">${question.prompt}</p></div>
     <div class="options">${options}</div></section>`);
 }
-function pickProfile(test, picks) {
-  const scores = Object.fromEntries(Object.keys(test.profiles).map(key => [key, 0]));
-  picks.forEach(key => scores[key]++);
+function pickProfile(picks) {
+  const scores = Object.create(null);
+  picks.forEach(key => { scores[key] = (scores[key] || 0) + 1; });
   const highest = Math.max(...Object.values(scores));
   // The latest relevant answer breaks ties.
   return picks.slice().reverse().find(key => scores[key] === highest);
@@ -1267,7 +1435,7 @@ function result() {
   const brand = document.querySelector('.site-header .brand').innerHTML;
   show(`<section class="result"><article class="result-card" style="--card:${p.color}">
     <div class="brand">${brand}</div>
-    <div class="card-body"><div class="receipt-top"><p class="receipt-kind">${activeTest.receipt}</p><span class="result-symbol" aria-hidden="true">${p.symbol}</span></div><h2 tabindex="-1">${p.title}</h2><p class="card-line">${p.line}</p><p class="receipt-note"><b>办事员备注</b>${p.habit}</p></div>
+    <div class="card-body"><div class="receipt-top"><p class="receipt-kind">${activeTest.receipt}</p><span class="result-symbol" aria-hidden="true">${p.symbol}</span></div><h2 tabindex="-1">${p.title}</h2><p class="result-insight">${p.insight}</p><p class="card-line">${p.line}</p><p class="receipt-note"><b>办事员备注</b>${p.habit}</p></div>
     <div class="card-bottom"><p>扫码办自己的小事</p>
       <a href="${publicUrl}" aria-label="打开没事办事处大厅"><canvas class="qr" width="225" height="225" aria-hidden="true"></canvas></a></div>
     </article><div class="result-copy">
@@ -1389,9 +1557,13 @@ function drawCard(profile, receipt) {
   ctx.textBaseline = 'alphabetic';
 
   ctx.font = '950 113px system-ui, sans-serif';
-  ctx.fillText(profile.title, 72, 823, 936);
-  ctx.font = '740 52px system-ui, sans-serif';
-  profile.line.split('\n').forEach((line, index) => ctx.fillText(line, 77, 921 + index * 70, 921));
+  ctx.fillText(profile.title, 72, 814, 936);
+  ctx.fillStyle = '#432174';
+  ctx.font = '800 38px system-ui, sans-serif';
+  ctx.fillText(profile.insight, 77, 881, 925);
+  ctx.fillStyle = ink;
+  ctx.font = '740 45px system-ui, sans-serif';
+  profile.line.split('\n').forEach((line, index) => ctx.fillText(line, 77, 956 + index * 62, 921));
 
   ctx.fillStyle = '#efe6ff';
   roundedFill(ctx, 76, 1118, 620, 217, 24);
@@ -1446,7 +1618,7 @@ stage.addEventListener('click', event => {
     answers[position++] = button.dataset.answer;
     if (position < activeTest.questions.length) quiz();
     else {
-      const resultId = pickProfile(activeTest, answers);
+      const resultId = activeTest.pickResult ? activeTest.pickResult(answers) : pickProfile(answers);
       selectedProfile = activeTest.profiles[resultId];
       result();
     }
